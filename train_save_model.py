@@ -82,9 +82,9 @@ print ('Loss: ', loss, '  Accuracy: ', acc)
 #---------------------------------------------------------------------------------
 predictions = tfmodel.predict (test_data)
 
-for i in range (test_labels.shape [0]):
-    print ('Actual:    ', np.argmax (test_labels [i]))
-    print ('Predicted: ', np.argmax (predictions [i]), '\n')
+#for i in range (test_labels.shape [0]):
+#    print ('Actual:    ', np.argmax (test_labels [i]))
+#    print ('Predicted: ', np.argmax (predictions [i]), '\n')
 
 #-------------------------------------------------------------------------
 #   Save and export the model
@@ -92,19 +92,16 @@ for i in range (test_labels.shape [0]):
 tensorflow_dir   = os.path.dirname (os.path.realpath (__file__))
 model_dir        = tensorflow_dir + '/model/'
 saved_model_dir  = tensorflow_dir + '/saved_model/'
-frozen_model_dir = tensorflow_dir + '/tf_mnist_keras/'
+frozen_model_dir = tensorflow_dir + '/frozen_model/'
+output_dir = tensorflow_dir + '/tf_mnist_keras1/'
 
-cmd = 'rm -Rf ' + model_dir
+cmd = 'rm -Rf ' + model_dir + ' ' + saved_model_dir + ' ' + frozen_model_dir + ' ' + output_dir
 os.system (cmd)
 
-cmd = 'rm -Rf ' + saved_model_dir
+cmd = 'mkdir ' + frozen_model_dir + ' ' + output_dir
 os.system (cmd)
-
-if not os.path.isdir (frozen_model_dir):
-    cmd = 'mkdir -p ' + frozen_model_dir
-    os.system (cmd)
-    cmd = 'cp ' + tensorflow_dir + '/tf_model_desc.json ' + frozen_model_dir
-    os.system (cmd)
+cmd = 'cp ' + tensorflow_dir + '/tf_model_desc.json ' + output_dir
+os.system (cmd)
 
 saver = tf.train.Saver ()
 sess  = tf.keras.backend.get_session()
@@ -118,10 +115,10 @@ tf.saved_model.simple_save(
 tf.saved_model.save(tfmodel, saved_model_dir)
 
 tf.io.write_graph(sess.graph_def, frozen_model_dir, 'model.pbtxt', as_text=True)
-tf.io.write_graph(sess.graph_def, frozen_model_dir, 'model.pb',    as_text=False)
+#tf.io.write_graph(sess.graph_def, frozen_model_dir, 'model.pb',    as_text=False)
 
-print(saver.saver_def.filename_tensor_name)
-print(saver.saver_def.restore_op_name)
+#print(saver.saver_def.filename_tensor_name)
+#print(saver.saver_def.restore_op_name)
 
 saver.save(sess, frozen_model_dir + 'model.ckpt')
 
@@ -133,7 +130,7 @@ fg = freeze_graph.freeze_graph(
                           output_node_names='OUTPUT/Softmax',
                           restore_op_name=saver.saver_def.restore_op_name,
                           filename_tensor_name=saver.saver_def.filename_tensor_name,
-                          output_graph= frozen_model_dir + 'mnist_keras.pb',
+                          output_graph= output_dir + 'mnist_keras.pb',
                           clear_devices=True,
                           initializer_nodes='',
                           input_saved_model_dir=model_dir 
