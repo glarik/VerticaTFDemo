@@ -93,7 +93,7 @@ tensorflow_dir   = os.path.dirname (os.path.realpath (__file__))
 model_dir        = tensorflow_dir + '/model/'
 saved_model_dir  = tensorflow_dir + '/saved_model/'
 frozen_model_dir = tensorflow_dir + '/frozen_model/'
-output_dir = tensorflow_dir + '/tf_mnist_keras1/'
+output_dir = tensorflow_dir + '/tf_mnist_keras/'
 
 cmd = 'rm -Rf ' + model_dir + ' ' + saved_model_dir + ' ' + frozen_model_dir + ' ' + output_dir
 os.system (cmd)
