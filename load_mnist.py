@@ -1,7 +1,7 @@
 import gzip
 import os
 import numpy as np
-from PIL import Image
+#from PIL import Image
 
 key_file = {
     'train_img':   'train-images-idx3-ubyte.gz',
